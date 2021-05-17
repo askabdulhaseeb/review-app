@@ -67,7 +67,7 @@ class _ProductsServicesScreenState extends State<ProductsServicesScreen> {
                         flex: 2,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Image.asset(productsList[index].image),
+                          child: Image.asset(productsList[index].imageURL),
                         ),
                       ),
                       Expanded(

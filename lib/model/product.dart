@@ -10,7 +10,7 @@ class Product {
   String subCategory;
   String secondSubCategory;
   String description;
-  String image;
+  String imageURL;
   double rating;
   int votes;
   int like;
@@ -23,7 +23,7 @@ class Product {
     @required this.subCategory,
     @required this.secondSubCategory,
     this.description,
-    this.image = defaultImageUrl,
+    this.imageURL,
     this.rating = 5.0,
     this.votes = 0,
     this.like = 0,
@@ -38,7 +38,7 @@ class Product {
       'sub_category': subCategory ?? '',
       'second_sub_category': secondSubCategory ?? '',
       'description': description ?? '',
-      'imageURL': image ?? '',
+      'imageURL': imageURL ?? '',
       'rating': rating,
       'votes': votes,
       'like': like,
@@ -54,7 +54,7 @@ class Product {
       subCategory: doc.data()['sub_category'] ?? '',
       secondSubCategory: doc.data()['second_sub_category'] ?? '',
       description: doc.data()['description'] ?? '',
-      image: doc.data()['imageURL'] ?? '',
+      imageURL: doc.data()['imageURL'] ?? '',
       rating: doc.data()['rating'] as double,
       votes: doc.data()['votes'] as int,
       like: doc.data()['like'] as int,
@@ -70,7 +70,7 @@ class Product {
       subCategory: map['sub_category'] ?? '',
       secondSubCategory: map['second_sub_category'] ?? '',
       description: map['description'] ?? '',
-      image: map['imageURL'] ?? '',
+      imageURL: map['imageURL'] ?? '',
       rating: map['rating'] as double,
       votes: map['votes'] as int,
       like: map['like'] as int,

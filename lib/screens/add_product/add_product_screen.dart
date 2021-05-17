@@ -2,6 +2,7 @@ import 'dart:io';
 // import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:reviewapp/screens/home/home_screen.dart';
 import '../../database/categories_firebase_methods.dart';
 import '../../database/product_firebase_methods.dart';
 import '../../model/category.dart';
@@ -19,6 +20,7 @@ class AddProductScreen extends StatefulWidget {
 class _AddProductScreenState extends State<AddProductScreen> {
   Product _product;
   final _productNameController = TextEditingController();
+  final _productPriceController = TextEditingController();
   final _descController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   String catValue = null, subValue = null, secondSubValue = null;
@@ -173,6 +175,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
+                  TextField(
+                    controller: _productPriceController,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+                      border: new OutlineInputBorder(),
+                      hintText: "Enter the Product Price",
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   //product name
                   TextField(
                     controller: _descController,
@@ -186,6 +201,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       hintText: "Description about a product",
                     ),
                   ),
+
                   const SizedBox(height: 10),
                   InkWell(
                     onTap: () {
@@ -236,7 +252,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     children: [
                       Expanded(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () async {
+                            if (_productNameController.text.isNotEmpty) {
+                              await _uploadeProduct();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (context) => HomeScreen(),
+                                  ),
+                                  (route) => false);
+                            } else {
+                              showErrorToast('Enter Product Name');
+                            }
+                          },
                           child: Container(
                             height: 50.0,
                             color: Colors.transparent,
@@ -262,24 +289,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                       Expanded(
                         child: InkWell(
-                          onTap: () {
+                          onTap: () async {
                             if (_productNameController.text.isNotEmpty) {
-                              // _product.category = catValue;
-                              // _product.subCategory = subValue;
-                              // _product.secondSubCategory = secondSubValue;
-                              // _product.title = _productNameController.text;
-                              // _product.description = _descController.text;
-                              Product _pp = Product(
-                                  id: '',
-                                  title: _productNameController.text,
-                                  price: 0.0,
-                                  category: catValue,
-                                  subCategory: subValue,
-                                  secondSubCategory: secondSubValue,
-                                  description: _descController.text);
-                              Map<String, dynamic> productInfo = _pp.toMap();
-                              ProductFirebaseMethods()
-                                  .addNewProduct(productInfo: productInfo);
+                              await _uploadeProduct();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (context) => HomeScreen(),
+                                  ),
+                                  (route) => false);
                             } else {
                               showErrorToast('Enter Product Name');
                             }
@@ -347,6 +364,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
         });
   }
 
+  _uploadeProduct() async {
+    String url =
+        await ProductFirebaseMethods().storeImageToFirestore(File(_image.path));
+    Product _pp = Product(
+        id: '',
+        title: _productNameController.text,
+        imageURL: url,
+        price: double.parse(_productPriceController.text),
+        category: catValue,
+        subCategory: subValue,
+        secondSubCategory: secondSubValue,
+        description: _descController.text);
+    Map<String, dynamic> productInfo = _pp.toMap();
+    ProductFirebaseMethods().addNewProduct(productInfo: productInfo);
+  }
+
   _imgFromCamera() async {
     PickedFile image;
     image = await ImagePicker.platform.pickImage(
@@ -360,10 +393,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   _imgFromGallery() async {
-    // PickedFile image = await ImagePicker.platform.pickImage(
-    //   source: ImageSource.gallery,
-    //   imageQuality: 50,
-    // );
+    PickedFile image = await ImagePicker.platform.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
     // final result = await FilePicker.platform.pickFiles(
     //   allowMultiple: false,
     // );
@@ -372,8 +405,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     // setState(() {
     //   file = File(path);
     // });
-    // setState(() {
-    //   _image = image;
-    // });
+    setState(() {
+      _image = image;
+    });
   }
 }
