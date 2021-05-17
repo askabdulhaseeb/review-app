@@ -397,14 +397,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
       source: ImageSource.gallery,
       imageQuality: 50,
     );
-    // final result = await FilePicker.platform.pickFiles(
-    //   allowMultiple: false,
-    // );
-    // if (result == null) return;
-    // final path = result.files.single.path;
-    // setState(() {
-    //   file = File(path);
-    // });
     setState(() {
       _image = image;
     });

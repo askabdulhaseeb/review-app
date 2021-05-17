@@ -21,6 +21,13 @@ class ProductFirebaseMethods {
     }
   }
 
+  getSnapshotOfSearchedProduct(String find) async {
+    return FirebaseFirestore.instance
+        .collection(fProducts)
+        // .where('title', isLessThanOrEqualTo: find)
+        .snapshots();
+  }
+
   addNewProduct({@required Map<String, dynamic> productInfo}) async {
     await FirebaseFirestore.instance
         .collection(fProducts)

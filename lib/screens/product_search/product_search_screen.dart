@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:reviewapp/database/product_firebase_methods.dart';
+import 'package:reviewapp/utils/assets_images.dart';
 import '../../screens/products_services/products_services_screen.dart';
 import '../../utils/color_constants.dart';
 
@@ -9,10 +12,20 @@ class ProductSearchScreen extends StatefulWidget {
 
 class _ProductSearchScreenState extends State<ProductSearchScreen> {
   final _searchController = TextEditingController();
+  Stream _productStream;
+
+  onListener() => setState(() {});
+  void onPageLoad() async {
+    _productStream =
+        await ProductFirebaseMethods().getSnapshotOfSearchedProduct('');
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(onListener);
+    onPageLoad();
   }
 
   @override
@@ -34,78 +47,104 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: [
-                //search text field
-                TextField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(top: 16),
-                    hintText: 'Search the product to review',
-                    border: InputBorder.none,
-                    prefixIcon:
-                        Icon(Icons.search, color: ColorConstants.greenColor),
-                  ),
+        child: Column(
+          children: [
+            //search text field
+            TextField(
+              controller: _searchController,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(top: 16),
+                hintText: 'Search the product to review',
+                border: InputBorder.none,
+                prefixIcon:
+                    Icon(Icons.search, color: ColorConstants.greenColor),
+              ),
+            ),
+            Divider(color: ColorConstants.dividerColor),
+            if (_searchController.text.isNotEmpty)
+              Flexible(
+                child: StreamBuilder(
+                  stream: _productStream,
+                  builder: (context, snapshot) {
+                    return (!snapshot.hasData)
+                        ? Center(
+                            child: Text('No Product Found Yet!'),
+                          )
+                        : ListView.builder(
+                            itemCount: snapshot.data.docs.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot ds = snapshot.data.docs[index];
+                              return ListTile(
+                                onTap: () {
+                                  print(ds['id']);
+                                },
+                                leading: CircleAvatar(
+                                  radius: 24,
+                                  backgroundImage: (ds['imageURL'] != null ||
+                                          ds['imageURL'] != '')
+                                      ? NetworkImage(ds['imageURL'])
+                                      : AssetImage(iAppLogo),
+                                ),
+                                title: Text(
+                                  ds['title'].toString() ?? 'No name found',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle:
+                                    Text(ds['description'].toString() ?? ''),
+                                trailing: Text(
+                                  ds['price'].toString() ?? '0',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                  },
                 ),
+              ),
 
-                //divider
-                Divider(
-                  color: ColorConstants.dividerColor,
-                ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
-                Text(
-                  'You have 1 review saved in your Drafts',
+            if (_searchController.text.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text(
+                  'You have review saved in your Drafts',
                   style:
                       TextStyle(color: ColorConstants.blackColor, fontSize: 17),
                 ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
-                InkWell(
-                  onTap: () {
-                    /*Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ProductReviewScreen(),
-                      ),
-                    );*/
-
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ProductsServicesScreen(),
-                      ),
-                    );
-                  },
+              ),
+            if (_searchController.text.isEmpty)
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProductsServicesScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 50.0,
+                  color: Colors.transparent,
+                  margin: EdgeInsets.symmetric(horizontal: 24),
                   child: Container(
-                    height: 50.0,
-                    color: Colors.transparent,
-                    margin: EdgeInsets.symmetric(horizontal: 24),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: ColorConstants.greenColor,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            )),
-                        child: Center(
-                          child: Text(
-                            "Finish Your Review",
-                            style: TextStyle(
-                                color: ColorConstants.whiteColor, fontSize: 18),
-                          ),
-                        )),
-                  ),
+                      decoration: BoxDecoration(
+                          color: ColorConstants.greenColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          )),
+                      child: Center(
+                        child: Text(
+                          "Finish Your Review",
+                          style: TextStyle(
+                              color: ColorConstants.whiteColor, fontSize: 18),
+                        ),
+                      )),
                 ),
-              ],
-            ),
-          ),
+              ),
+          ],
         ),
       ),
     );
