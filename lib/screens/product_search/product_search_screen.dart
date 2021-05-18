@@ -14,18 +14,22 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
   final _searchController = TextEditingController();
   Stream _productStream;
 
-  onListener() => setState(() {});
-  void onPageLoad() async {
+  onListener() async {
     _productStream =
-        await ProductFirebaseMethods().getSnapshotOfSearchedProduct('');
+        await ProductFirebaseMethods().getSnapshotOfSearchedProduct(
+      _searchController.text ?? '',
+    );
     setState(() {});
   }
+  // void onPageLoad() async {
+  //   setState(() {});
+  // }
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(onListener);
-    onPageLoad();
+    // onPageLoad();
   }
 
   @override

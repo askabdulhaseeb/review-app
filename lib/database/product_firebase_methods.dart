@@ -24,7 +24,7 @@ class ProductFirebaseMethods {
   getSnapshotOfSearchedProduct(String find) async {
     return FirebaseFirestore.instance
         .collection(fProducts)
-        // .where('title', isLessThanOrEqualTo: find)
+        .where('title', isGreaterThanOrEqualTo: find)
         .snapshots();
   }
 
