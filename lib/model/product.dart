@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../utils/assets_images.dart';
 
 class Product {
   String id;

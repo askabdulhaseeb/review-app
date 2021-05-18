@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class SubCategory {
   String title;
   String id;

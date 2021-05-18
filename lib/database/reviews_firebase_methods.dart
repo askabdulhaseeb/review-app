@@ -4,11 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:reviewapp/widgets/show_toast_messages.dart';
 import '../utils/firebase_strings.dart';
 
 class ReviewsFirebaseMethods {
   getAllReviewsOfSpecificCategory({@required String categoryID}) async {
-    var datee = await FirebaseFirestore.instance
+    var datee = FirebaseFirestore.instance
         .collection(fReviews)
         .where('category_id', isEqualTo: categoryID)
         .snapshots();
@@ -26,6 +27,7 @@ class ReviewsFirebaseMethods {
       final urlDownload = await snapshot.ref.getDownloadURL();
       return urlDownload;
     } on FirebaseException catch (e) {
+      showErrorToast(e.toString());
       return null;
     }
   }
