@@ -16,9 +16,6 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  PickedFile _imageFile;
-  dynamic _pickImageError;
-
   bool isVideo = false;
   VideoPlayerController _controller;
   VideoPlayerController _toBeDisposed;
@@ -264,7 +261,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     }
   }
 
-  void _onImageButtonPressed(ImageSource source, {BuildContext context}) async {
+  void _onImageButtonPressed(ImageSource source) async {
     if (_controller != null) {
       await _controller.setVolume(0.0);
     }
@@ -315,6 +312,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       }
     } else {
       _retrieveDataError = response.exception.code;
+      print(_retrieveDataError);
     }
   }
 

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:reviewapp/widgets/show_toast_messages.dart';
 import '../utils/firebase_strings.dart';
 import 'package:path/path.dart';
 
@@ -17,6 +18,7 @@ class ProductFirebaseMethods {
       final urlDownload = await snapshot.ref.getDownloadURL();
       return urlDownload;
     } on FirebaseException catch (e) {
+      showErrorToast(e.toString());
       return null;
     }
   }

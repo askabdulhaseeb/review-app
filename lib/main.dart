@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/login/login_screen.dart';
 import 'services/user_local_data.dart';
+import 'utils/push_notification_manager.dart';
 
 List<CameraDescription> cameras;
 
@@ -11,6 +12,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await UserLocalData.init();
+  PushNotificationsManager().init();
   cameras = await availableCameras();
   runApp(MyApp());
 }

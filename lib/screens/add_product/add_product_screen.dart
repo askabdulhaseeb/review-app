@@ -2,10 +2,9 @@ import 'dart:io';
 // import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:reviewapp/screens/home/home_screen.dart';
-import 'package:reviewapp/screens/product_review/product_review_screen.dart';
-import 'package:reviewapp/screens/product_search/product_search_screen.dart';
-import 'package:reviewapp/widgets/showLoadingDialog.dart';
+import '../../screens/home/home_screen.dart';
+import '../../screens/product_search/product_search_screen.dart';
+import '../../widgets/showLoadingDialog.dart';
 import '../../database/categories_firebase_methods.dart';
 import '../../database/product_firebase_methods.dart';
 import '../../model/category.dart';
@@ -26,7 +25,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _productPriceController = TextEditingController();
   final _descController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-  String catValue = null, subValue = null, secondSubValue = null;
+  String catValue, subValue, secondSubValue;
   List<Category> _allCategories = [];
   List<SubCategory> _allSubCategories = [];
   PickedFile _image;
@@ -34,7 +33,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   getCategories() async {
     _allCategories = await CategoriesFirebaseMethods().getCategoriesList();
     setState(() {});
-    // catValue = _allCategories[0].id;
     catValue = null;
     subValue = null;
     secondSubValue = null;
@@ -401,24 +399,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   _imgFromCamera() async {
-    PickedFile image;
-    image = await ImagePicker.platform.pickImage(
+    ImagePicker _imagePicker = ImagePicker();
+    PickedFile _file = await _imagePicker.getImage(
       source: ImageSource.camera,
       imageQuality: 50,
     );
 
     setState(() {
-      _image = image;
+      _image = _file;
     });
   }
 
   _imgFromGallery() async {
-    PickedFile image = await ImagePicker.platform.pickImage(
+    ImagePicker _imagePicker = ImagePicker();
+    PickedFile _file = await _imagePicker.getImage(
       source: ImageSource.gallery,
       imageQuality: 50,
     );
     setState(() {
-      _image = image;
+      _image = _file;
     });
   }
 }
