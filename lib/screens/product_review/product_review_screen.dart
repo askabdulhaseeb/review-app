@@ -269,6 +269,7 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
     );
     Review review = Review(
       uid: UserLocalData.getUID(),
+      reviewID: '',
       productId: widget._product.id,
       categoryId: widget._category.id,
       title: _productReviewController.text,
