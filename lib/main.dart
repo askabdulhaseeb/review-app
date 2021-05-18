@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Quicksand',
       ),
       home: (_alreadyLogin() == true) ? HomeScreen() : LoginScreen(),
+      // home: CategoryScreen(),
     );
   }
 }

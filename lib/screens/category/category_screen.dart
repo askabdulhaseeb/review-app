@@ -28,7 +28,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void initState() {
     super.initState();
     getCategoriesList();
-    UserLocalData.setUID('yiqovE9jlwUQ7LzoGQc53lVIMjk1');
+    // UserLocalData.setUID('yiqovE9jlwUQ7LzoGQc53lVIMjk1');
     controller.addListener(scheduleRebuild);
   }
 

@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reviewapp/screens/home/home_screen.dart';
+import 'package:reviewapp/screens/product_review/product_review_screen.dart';
+import 'package:reviewapp/screens/product_search/product_search_screen.dart';
+import 'package:reviewapp/widgets/showLoadingDialog.dart';
 import '../../database/categories_firebase_methods.dart';
 import '../../database/product_firebase_methods.dart';
 import '../../model/category.dart';
@@ -254,10 +257,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         child: InkWell(
                           onTap: () async {
                             if (_productNameController.text.isNotEmpty) {
+                              showLoadingDislog(context);
                               await _uploadeProduct();
+                              // var fetchedCategory =
+                              //     await CategoriesFirebaseMethods()
+                              //         .getCategory(_product.category);
+                              // Category cat =
+                              //     Category.fromDocument(fetchedCategory);
+                              // Navigator.of(context).pop();
+                              // Navigator.of(context).pushAndRemoveUntil(
+                              //     MaterialPageRoute(
+                              //       builder: (context) => ProductReviewScreen(
+                              //         product: _product,
+                              //         category: cat,
+                              //       ),
+                              //     ),
+                              //     (route) => false);
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
-                                    builder: (context) => HomeScreen(),
+                                    builder: (context) => ProductSearchScreen(),
                                   ),
                                   (route) => false);
                             } else {
@@ -291,7 +309,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         child: InkWell(
                           onTap: () async {
                             if (_productNameController.text.isNotEmpty) {
+                              showLoadingDislog(context);
                               await _uploadeProduct();
+                              Navigator.of(context).pop();
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                     builder: (context) => HomeScreen(),
@@ -367,7 +387,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   _uploadeProduct() async {
     String url =
         await ProductFirebaseMethods().storeImageToFirestore(File(_image.path));
-    Product _pp = Product(
+    _product = Product(
         id: '',
         title: _productNameController.text,
         imageURL: url,
@@ -376,7 +396,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         subCategory: subValue,
         secondSubCategory: secondSubValue,
         description: _descController.text);
-    Map<String, dynamic> productInfo = _pp.toMap();
+    Map<String, dynamic> productInfo = _product.toMap();
     ProductFirebaseMethods().addNewProduct(productInfo: productInfo);
   }
 
