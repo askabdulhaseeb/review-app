@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:reviewapp/screens/category/category_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/login/login_screen.dart';
 import 'services/user_local_data.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Quicksand',
       ),
       home: (_alreadyLogin() == true) ? HomeScreen() : LoginScreen(),
+      // home: CategoryScreen(),
     );
   }
 }
