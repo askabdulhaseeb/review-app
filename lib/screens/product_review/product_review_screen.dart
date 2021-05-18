@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:reviewapp/model/category.dart';
+import 'package:reviewapp/model/product.dart';
+import 'package:reviewapp/screens/product_review/product_overview.dart';
 import '../../utils/color_constants.dart';
 
 class ProductReviewScreen extends StatefulWidget {
+  final Product _product;
+  final Category _category;
+  const ProductReviewScreen(
+      {@required Product product, @required Category category})
+      : _product = product,
+        _category = category;
   @override
   _ProductReviewScreenState createState() => _ProductReviewScreenState();
 }
@@ -10,11 +19,6 @@ class ProductReviewScreen extends StatefulWidget {
 class _ProductReviewScreenState extends State<ProductReviewScreen> {
   final _productReviewController = TextEditingController();
   final _aboutProductController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +41,14 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 24,
+                ProductOverview(
+                  product: widget._product,
+                  category: widget._category.title,
                 ),
-
-                //review field
                 TextField(
                   controller: _productReviewController,
                   decoration: InputDecoration(
@@ -61,9 +64,7 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
                       fillColor: Colors.white70),
                 ),
 
-                SizedBox(
-                  height: 16,
-                ),
+                SizedBox(height: 16),
 
                 //text area
                 TextField(
@@ -82,9 +83,7 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
                       fillColor: Colors.white70),
                 ),
 
-                SizedBox(
-                  height: 16,
-                ),
+                SizedBox(height: 16),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,11 +116,7 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
                     ),
                   ],
                 ),
-
-                SizedBox(
-                  height: 16,
-                ),
-
+                SizedBox(height: 16),
                 //product rating
                 Text(
                   'Product Rating',
@@ -130,11 +125,7 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
                       fontSize: 18,
                       color: ColorConstants.greyColor),
                 ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
+                SizedBox(height: 20),
                 Row(
                   children: [
                     _buildChip('1', Colors.red),

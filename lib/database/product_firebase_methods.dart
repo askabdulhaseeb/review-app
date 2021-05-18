@@ -24,7 +24,7 @@ class ProductFirebaseMethods {
   getSnapshotOfSearchedProduct(String find) async {
     return FirebaseFirestore.instance
         .collection(fProducts)
-        .where('title', isGreaterThanOrEqualTo: find)
+        .where('title', isGreaterThanOrEqualTo: find.toUpperCase())
         .snapshots();
   }
 
@@ -40,5 +40,9 @@ class ProductFirebaseMethods {
             .update({'id': value.id});
       },
     );
+  }
+
+  fetchProductInfo({@required id}) async {
+    return await FirebaseFirestore.instance.collection(fProducts).doc(id).get();
   }
 }

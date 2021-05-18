@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:reviewapp/database/categories_firebase_methods.dart';
 import 'package:reviewapp/database/product_firebase_methods.dart';
+import 'package:reviewapp/model/category.dart';
+import 'package:reviewapp/model/product.dart';
+import 'package:reviewapp/model/sub_category.dart';
+import 'package:reviewapp/screens/product_review/product_review_screen.dart';
 import 'package:reviewapp/utils/assets_images.dart';
 import '../../screens/products_services/products_services_screen.dart';
 import '../../utils/color_constants.dart';
@@ -21,9 +26,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
     );
     setState(() {});
   }
-  // void onPageLoad() async {
-  //   setState(() {});
-  // }
 
   @override
   void initState() {
@@ -80,8 +82,26 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                             itemBuilder: (context, index) {
                               DocumentSnapshot ds = snapshot.data.docs[index];
                               return ListTile(
-                                onTap: () {
-                                  print(ds['id']);
+                                onTap: () async {
+                                  var fetchedData =
+                                      await ProductFirebaseMethods()
+                                          .fetchProductInfo(id: ds['id']);
+                                  Product _product =
+                                      Product.fromDocument(fetchedData);
+                                  var fetchedCategory =
+                                      await CategoriesFirebaseMethods()
+                                          .getCategory(_product.category);
+                                  Category cat =
+                                      Category.fromDocument(fetchedCategory);
+
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ProductReviewScreen(
+                                        product: _product,
+                                        category: cat,
+                                      ),
+                                    ),
+                                  );
                                 },
                                 leading: CircleAvatar(
                                   radius: 24,

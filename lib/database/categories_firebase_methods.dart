@@ -11,6 +11,13 @@ class CategoriesFirebaseMethods {
   //       .get();
   // }
 
+  getCategory(String id) async {
+    return await FirebaseFirestore.instance
+        .collection(fCategories)
+        .doc(id)
+        .get();
+  }
+
   getCategoriesList() async {
     List<Category> _cat = [];
     await FirebaseFirestore.instance
@@ -52,35 +59,4 @@ class CategoriesFirebaseMethods {
     return _cat;
   }
 }
-
-// [
-//    {
-//    cat_id: 123
-//    'name': abc
-//     sub_cat:[
-//        {
-//          id: 12
-//          name: qw
-//        }
-//        {
-//          id: 1222
-//          name: qwsd
-//        }
-//      ]
-//    }
-// 
-//    {
-//    cat_id: 123
-//    'name': abc
-//     sub_cat:[
-//        {
-//          id: 12
-//          name: qw
-//        }
-//        {
-//          id: 1222
-//          name: qwsd
-//        }
-//      ]
-//    }
 // ]
