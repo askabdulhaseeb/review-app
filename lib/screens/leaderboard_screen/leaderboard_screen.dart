@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reviewapp/screens/home/home_screen.dart';
 import '../../model/leaderboard.dart';
 import '../../utils/color_constants.dart';
 
@@ -25,7 +26,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: ColorConstants.blackColor),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
+              ),
+              (route) => false,
+            );
           },
         ),
         title: Text(

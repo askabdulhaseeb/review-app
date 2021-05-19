@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reviewapp/model/review.dart';
+import 'package:reviewapp/screens/leaderboard_screen/leaderboard_screen.dart';
 import '../../database/reviews_firebase_methods.dart';
 import '../../pages/AllCategories/custome_tab_bar_view.dart';
 import 'adds_carouse_slider.dart';
@@ -18,20 +19,33 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
   List<Review> reviewList = [];
   List<String> _tabsName = [];
   List<String> _facCatId = [];
-  int _initPosition = 1;
+  int _initPosition;
   int ind;
   Stream _stream;
 
   getTabs() {
     _tabsName = UserLocalData.getNameOfFavCategoriesList();
-    _tabsName.insert(0, 'Leader Board');
+    // _tabsName.insert(0, 'Leader Board');
+    _tabsName.insert(0, 'All Categories');
     _facCatId = UserLocalData.getIdOfFavCategoriesList();
   }
 
   _streamFunctionHelper(int index) async {
-    _stream = await ReviewsFirebaseMethods().getAllReviewsOfSpecificCategory(
-      categoryID: _facCatId[_initPosition - 1],
-    );
+    // if (_initPosition == 0) {
+    //   Navigator.of(context).pushAndRemoveUntil(
+    //     MaterialPageRoute(
+    //       builder: (context) => LeaderboardScreen(),
+    //     ),
+    //     (route) => false,
+    //   );
+    // }
+    if (_initPosition == 1) {
+      _stream = await ReviewsFirebaseMethods().getAllReviews();
+    } else {
+      _stream = await ReviewsFirebaseMethods().getAllReviewsOfSpecificCategory(
+        categoryID: _facCatId[_initPosition - 1],
+      );
+    }
     setState(() {});
   }
 
@@ -44,7 +58,7 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
   void initState() {
     getTabs();
     super.initState();
-    _initPosition = 1;
+    _initPosition = 0;
     _getUpdatedStream();
   }
 

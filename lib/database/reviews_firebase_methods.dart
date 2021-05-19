@@ -8,6 +8,10 @@ import 'package:reviewapp/widgets/show_toast_messages.dart';
 import '../utils/firebase_strings.dart';
 
 class ReviewsFirebaseMethods {
+  getAllReviews() async {
+    return FirebaseFirestore.instance.collection(fReviews).snapshots();
+  }
+
   getAllReviewsOfSpecificCategory({@required String categoryID}) async {
     return FirebaseFirestore.instance
         .collection(fReviews)
