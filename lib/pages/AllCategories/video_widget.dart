@@ -19,6 +19,7 @@ class _VideoAppState extends State<VideoWidget> {
   @override
   void initState() {
     super.initState();
+    print('Video Link: ${widget._videoUrl}');
     if (widget._videoUrl != null) {
       _controller = VideoPlayerController.network(widget._videoUrl)
         ..initialize().then((_) {
@@ -29,36 +30,28 @@ class _VideoAppState extends State<VideoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _controller?.value?.isInitialized == true
-        ? AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: Stack(
-              children: [
-                VideoPlayer(_controller),
-                Center(
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _controller?.value?.isPlaying == true
-                            ? _controller?.pause()
-                            : _controller?.play();
-                      });
-                    },
-                    iconSize: 45,
-                    icon: Icon(
-                      (_controller?.value?.isPlaying == true)
-                          ? Icons.pause
-                          : Icons.play_arrow,
-                    ),
-                  ),
-                )
-              ],
+    return Stack(
+      children: [
+        VideoPlayer(_controller),
+        Center(
+          child: IconButton(
+            onPressed: () {
+              setState(() {
+                _controller?.value?.isPlaying == true
+                    ? _controller?.pause()
+                    : _controller?.play();
+              });
+            },
+            iconSize: 45,
+            icon: Icon(
+              (_controller?.value?.isPlaying == true)
+                  ? Icons.pause
+                  : Icons.play_arrow,
             ),
-          )
-        : Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: CircularProgressIndicator(),
-          );
+          ),
+        )
+      ],
+    );
   }
 
   @override

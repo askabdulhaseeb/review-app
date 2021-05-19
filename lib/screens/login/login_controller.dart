@@ -40,6 +40,7 @@ class LoginController extends GetxController {
 
       // Once signed in, return the UserCredential
       var result = await auth.signInWithCredential(credential);
+      print(result);
       User currentuser = auth.currentUser;
       profile = Profile(
         name: currentuser.displayName,
@@ -75,6 +76,7 @@ class LoginController extends GetxController {
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         final FacebookAccessToken accessToken = result.accessToken;
+        print(accessToken);
 
         final myResult = await facebookSignIn.logIn(['email']);
         final token = myResult.accessToken.token;

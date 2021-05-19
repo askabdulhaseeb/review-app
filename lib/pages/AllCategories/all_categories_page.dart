@@ -3,6 +3,7 @@
 // import 'package:path/path.dart';
 
 // import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../database/reviews_firebase_methods.dart';
 // import 'package:review_app/database/video_uploade_firebase.dart';
@@ -14,6 +15,7 @@ import '../../model/review_video.dart';
 import '../../screens/search/search_screen.dart';
 import '../../services/user_local_data.dart';
 import '../../utils/color_constants.dart';
+import 'review_video_gridview_card.dart';
 import 'video_widget.dart';
 
 class AllCategoriesPage extends StatefulWidget {
@@ -37,6 +39,7 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
   }
 
   _streamFunctionHelper(int index) async {
+    print('Possition: ${_facCatId[_initPosition - 1]}');
     _stream = await ReviewsFirebaseMethods().getAllReviewsOfSpecificCategory(
       categoryID: _facCatId[_initPosition - 1],
     );
@@ -53,40 +56,8 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
     getTabs();
     super.initState();
     _initPosition = 1;
-    getReviewVideos();
     _getUpdatedStream();
   }
-
-  // UploadTask task;
-  // File file;
-  // String fileName;
-  // Future selectFile() async {
-  //   final result = await FilePicker.platform.pickFiles(allowMultiple: false);
-
-  //   if (result == null) return;
-  //   final path = result.files.single.path;
-
-  //   setState(() => file = File(path));
-  //   fileName = (file != null) ? basename(file.path) : 'No File Selected';
-  //   uploadFile();
-  // }
-
-  // Future uploadFile() async {
-  //   if (file == null) return;
-
-  //   final fileName = basename(file.path);
-  //   final destination = 'files/$fileName';
-
-  //   task = UploadVideoFirebase.uploadFile(destination, file);
-  //   setState(() {});
-
-  //   if (task == null) return;
-
-  //   final snapshot = await task.whenComplete(() {});
-  //   final urlDownload = await snapshot.ref.getDownloadURL();
-
-  //   print('Download-Link: $urlDownload');
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -110,102 +81,79 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
         ],
       ),
       body: SafeArea(
-          child: CustomTabView(
-        initPosition: _initPosition,
-        itemCount: _tabsName.length,
-        tabBuilder: (context, index) => Tab(text: _tabsName[index]),
-        onPositionChange: (value) {
-          setState(() {
-            _initPosition = value;
-          });
-        },
-        pageBuilder: (context, index) {
-          return Column(
-            children: [
-              AddsCarouseSlider(),
-              VideoWidget(
-                  'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'),
-              // Flexible(
-              // child: ReviewVideoCardWidget(
-              //   url:
-              //       'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-              // ),
-              //   child: ,
-              // child: StreamBuilder(
-              //   stream: _getUpdatedStream(),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.hasError) {
-              //       return Center(
-              //         child: Text('Error 404\nData not Found'),
-              //       );
-              //     } else {
-              //       return (snapshot.hasData)
-              //           ? GridView.builder(
-              //               padding: EdgeInsets.all(16),
-              //               itemCount: snapshot.data.docs.length,
-              //               shrinkWrap: true,
-              //               primary: false,
-              //               gridDelegate:
-              //                   SliverGridDelegateWithFixedCrossAxisCount(
-              //                       crossAxisCount: 2,
-              //                       crossAxisSpacing: 8,
-              //                       mainAxisSpacing: 8,
-              //                       childAspectRatio: 0.7),
-              //               itemBuilder: (BuildContext context, int index) {
-              //                 DocumentSnapshot ds = snapshot.data.docs[index];
-              //                 return ReviewVideoCardWidget(
-              //                   // url: ds['url'] ?? '',
-              //                   url:
-              //                       'https://www.youtube.com/watch?v=aqHkkQCKpxE',
-              // reviewID: ds['review_id'] ?? '',
-              // title: ds['title'] ?? 'No Title',
-              // views: ds['views'] ?? '0' as int,
-              // );
-              // Chewie
-              // youtube_player_flutter
-              //               },
-              //             )
-              //           : Center(
-              //               child: Text('No Data found yet'),
-              //             );
-              //     }
-              //   },
-              // ),
-              // ),
-            ],
-          );
-        },
-      )),
-    );
-  }
-
-  getReviewVideos() {
-    _reviewVideosList.add(
-      ReviewVideo('https://picsum.photos/200/300', 'title of review', '1225'),
-    );
-
-    _reviewVideosList.add(
-      ReviewVideo('https://picsum.photos/200/300', 'title of review', '125'),
-    );
-
-    _reviewVideosList.add(
-      ReviewVideo('https://picsum.photos/200/300', 'title of review', '125'),
-    );
-
-    _reviewVideosList.add(
-      ReviewVideo('https://picsum.photos/200/300', 'title of review', '125'),
-    );
-
-    _reviewVideosList.add(
-      ReviewVideo('https://picsum.photos/200/300', 'title of review', '125'),
-    );
-
-    _reviewVideosList.add(
-      ReviewVideo('https://picsum.photos/200/300', 'title of review', '125'),
-    );
-
-    _reviewVideosList.add(
-      ReviewVideo('https://picsum.photos/200/300', 'title of review', '125'),
+        child: CustomTabView(
+          initPosition: _initPosition,
+          itemCount: _tabsName.length,
+          tabBuilder: (context, index) => Tab(text: _tabsName[index]),
+          onPositionChange: (value) {
+            setState(() {
+              _initPosition = value;
+            });
+          },
+          pageBuilder: (context, index) {
+            return Column(
+              children: [
+                AddsCarouseSlider(),
+                // VideoWidget(
+                //     'https://firebasestorage.googleapis.com/v0/b/myrevue-a3152.appspot.com/o/reviews%2F1621364387503b050a018-7729-4ce7-931c-493d2ede3bf63592458739462634040.mp4?alt=media&token=e08058bc-bbbb-4ec9-92a5-39bf1763f400'),
+                // Flexible(
+                // ReviewVideoCardWidget(
+                //   url:
+                //       'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                // ),
+                StreamBuilder(
+                  stream: _getUpdatedStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error 404\nData not Found'),
+                      );
+                    } else {
+                      print('Length: ${snapshot?.data?.docs?.length}');
+                      return (snapshot.hasData)
+                          ? GridView.builder(
+                              padding: EdgeInsets.all(16),
+                              itemCount: snapshot?.data?.docs?.length,
+                              shrinkWrap: true,
+                              primary: false,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                childAspectRatio: 0.7,
+                              ),
+                              itemBuilder: (BuildContext context, int index) {
+                                if (snapshot?.data?.docs[index] != null) {
+                                  DocumentSnapshot ds =
+                                      snapshot?.data?.docs[index];
+                                  return ReviewVideoCardWidget(
+                                    // url: ds['url'] ?? '',
+                                    url: ds['videoURL'],
+                                    reviewID: ds['reviewID'] ?? '',
+                                    title: ds['title'] ?? 'No Title',
+                                    views: int.parse(ds['views'].toString()),
+                                  );
+                                } else {
+                                  return Center(
+                                    child: Text('No data found'),
+                                  );
+                                }
+                              })
+                          : Container(
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                    }
+                    // ),
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 }

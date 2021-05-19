@@ -42,11 +42,6 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
-  Future<List<CameraDescription>> _getCamera() async {
-    cameras = await availableCameras();
-    return cameras;
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {

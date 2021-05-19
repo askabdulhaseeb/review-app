@@ -9,11 +9,10 @@ import '../utils/firebase_strings.dart';
 
 class ReviewsFirebaseMethods {
   getAllReviewsOfSpecificCategory({@required String categoryID}) async {
-    var datee = FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection(fReviews)
-        .where('category_id', isEqualTo: categoryID)
+        .where('categoryId', isEqualTo: categoryID)
         .snapshots();
-    return datee;
   }
 
   storeVideoToFirestore(File image) async {
