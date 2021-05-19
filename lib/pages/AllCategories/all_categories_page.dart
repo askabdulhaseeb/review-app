@@ -1,23 +1,12 @@
-// import 'dart:io';
-// import 'package:file_picker/file_picker.dart';
-// import 'package:path/path.dart';
-
-// import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewapp/model/review.dart';
 import '../../database/reviews_firebase_methods.dart';
-// import 'package:review_app/database/video_uploade_firebase.dart';
 import '../../pages/AllCategories/custome_tab_bar_view.dart';
-// import 'package:review_app/pages/videoOfFirebasse/video.dart';
-// import 'package:review_app/screens/sub_category/sub_category_screen.dart';
 import 'adds_carouse_slider.dart';
-// import '../../model/review_video.dart';
 import '../../screens/search/search_screen.dart';
 import '../../services/user_local_data.dart';
 import '../../utils/color_constants.dart';
 import 'review_video_gridview_card.dart';
-// import 'video_widget.dart';
 
 class AllCategoriesPage extends StatefulWidget {
   @override
@@ -124,7 +113,6 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
                                 )
                               : GridView.builder(
                                   padding: EdgeInsets.all(16),
-                                  // itemCount: snapshot?.data?.docs?.length,
                                   itemCount: reviewList.length,
                                   shrinkWrap: true,
                                   primary: false,
@@ -137,20 +125,9 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
                                   ),
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    // DocumentSnapshot ds =
-                                    //     snapshot?.data?.docs[index];
-                                    // Review review =
-                                    //     _getReviewObject(ds['reviewID']);
-                                    // print('Okay: ${review.title}');
                                     return ReviewVideoCardWidget(
                                       review: reviewList[index],
                                     );
-                                    // return ReviewVideoCardWidget(
-                                    //   url: ds['videoURL'],
-                                    //   reviewID: ds['reviewID'] ?? '',
-                                    //   title: ds['title'] ?? 'No Title',
-                                    //   views: int.parse(ds['views'].toString()),
-                                    // );
                                   })
                           : Container(
                               child: Center(
@@ -158,7 +135,6 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
                               ),
                             );
                     }
-                    // ),
                   },
                 ),
               ],

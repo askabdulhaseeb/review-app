@@ -46,4 +46,12 @@ class ReviewsFirebaseMethods {
           .update({'reviewID': value.id});
     });
   }
+
+  updateReview(
+      {@required String reviewID, @required Map<String, dynamic> map}) async {
+    await FirebaseFirestore.instance
+        .collection(fReviews)
+        .doc(reviewID)
+        .update(map);
+  }
 }

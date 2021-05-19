@@ -275,7 +275,7 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
       title: _productReviewController.text,
       about: _aboutProductController.text,
       rating: rating,
-      views: 0,
+      views: [],
       videoURL: url,
     );
     await ReviewsFirebaseMethods().addNewReview(review.toMap());

@@ -10,7 +10,7 @@ class Review {
   final String title;
   final String about;
   final double rating;
-  final int views;
+  final List<String> views;
   final String videoURL;
 
   Review({
@@ -41,15 +41,15 @@ class Review {
 
   factory Review.fromDocument(doc) {
     return Review(
-      uid: doc.data()['uid'],
-      reviewID: doc.data()['reviewID'],
-      productId: doc.data()['productId'],
-      categoryId: doc.data()['categoryId'],
-      title: doc.data()['title'],
-      about: doc.data()['about'],
-      rating: doc.data()['rating'],
-      views: doc.data()['views'],
-      videoURL: doc.data()['videoURL'],
+      uid: doc.data()['uid'] ?? '',
+      reviewID: doc.data()['reviewID'] ?? '',
+      productId: doc.data()['productId'] ?? '',
+      categoryId: doc.data()['categoryId'] ?? '',
+      title: doc.data()['title'] ?? '',
+      about: doc.data()['about'] ?? '',
+      rating: doc.data()['rating'] ?? 0,
+      views: List<String>.from(doc.data()['views']),
+      videoURL: doc.data()['videoURL'] ?? '',
     );
   }
 
@@ -62,7 +62,7 @@ class Review {
       title: map['title'],
       about: map['about'],
       rating: map['rating'],
-      views: map['views'],
+      views: List<String>.from(map['views']),
       videoURL: map['videoURL'],
     );
   }

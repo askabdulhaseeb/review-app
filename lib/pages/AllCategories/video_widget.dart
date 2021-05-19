@@ -46,6 +46,7 @@ class _VideoAppState extends State<VideoWidget> {
               (_controller?.value?.isPlaying == true)
                   ? Icons.pause
                   : Icons.play_arrow,
+              color: Colors.white,
             ),
           ),
         )
