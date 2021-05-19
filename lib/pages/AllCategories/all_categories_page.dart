@@ -40,13 +40,6 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
     return _stream;
   }
 
-  _getReviewObject(String reviewID) async {
-    var doc = await ReviewsFirebaseMethods()
-        .getSpecificReviewByID(reviewID: reviewID);
-    Review review = Review.fromDocument(doc);
-    return review;
-  }
-
   @override
   void initState() {
     getTabs();
@@ -90,50 +83,52 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
             return Column(
               children: [
                 AddsCarouseSlider(),
-                StreamBuilder(
-                  stream: _getUpdatedStream(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error 404\nData not Found'),
-                      );
-                    } else {
-                      if (snapshot.data?.docs != null) {
-                        reviewList.clear();
-                        snapshot.data.docs.forEach((doc) {
-                          reviewList.add(Review.fromDocument(doc));
-                        });
+                Expanded(
+                  child: StreamBuilder(
+                    stream: _getUpdatedStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text('Error 404\nData not Found'),
+                        );
+                      } else {
+                        if (snapshot.data?.docs != null) {
+                          reviewList.clear();
+                          snapshot.data.docs.forEach((doc) {
+                            reviewList.add(Review.fromDocument(doc));
+                          });
+                        }
+                        return (snapshot.hasData)
+                            ? (reviewList.length == 0)
+                                ? Center(
+                                    child: Text('No data found'),
+                                  )
+                                : GridView.builder(
+                                    padding: EdgeInsets.all(16),
+                                    itemCount: reviewList.length,
+                                    shrinkWrap: true,
+                                    primary: false,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 8,
+                                      mainAxisSpacing: 8,
+                                      childAspectRatio: 0.7,
+                                    ),
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return ReviewVideoCardWidget(
+                                        review: reviewList[index],
+                                      );
+                                    })
+                            : Container(
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
                       }
-                      return (snapshot.hasData)
-                          ? (reviewList.length == 0)
-                              ? Center(
-                                  child: Text('No data found'),
-                                )
-                              : GridView.builder(
-                                  padding: EdgeInsets.all(16),
-                                  itemCount: reviewList.length,
-                                  shrinkWrap: true,
-                                  primary: false,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 8,
-                                    mainAxisSpacing: 8,
-                                    childAspectRatio: 0.7,
-                                  ),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return ReviewVideoCardWidget(
-                                      review: reviewList[index],
-                                    );
-                                  })
-                          : Container(
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                    }
-                  },
+                    },
+                  ),
                 ),
               ],
             );
