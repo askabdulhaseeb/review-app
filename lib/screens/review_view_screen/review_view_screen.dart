@@ -19,7 +19,8 @@ class _ReviewViewScreenState extends State<ReviewViewScreen> {
   @override
   void initState() {
     super.initState();
-    if (!widget.review.views.contains(UserLocalData.getUID())) {
+    if (!widget.review.views.contains(UserLocalData.getUID()) &&
+        widget.review.uid != UserLocalData.getUID()) {
       widget.review.views.add(UserLocalData.getUID());
       ReviewsFirebaseMethods().updateReview(
         reviewID: widget.review.reviewID,

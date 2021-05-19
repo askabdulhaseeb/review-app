@@ -257,20 +257,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             if (_productNameController.text.isNotEmpty) {
                               showLoadingDislog(context);
                               await _uploadeProduct();
-                              // var fetchedCategory =
-                              //     await CategoriesFirebaseMethods()
-                              //         .getCategory(_product.category);
-                              // Category cat =
-                              //     Category.fromDocument(fetchedCategory);
-                              // Navigator.of(context).pop();
-                              // Navigator.of(context).pushAndRemoveUntil(
-                              //     MaterialPageRoute(
-                              //       builder: (context) => ProductReviewScreen(
-                              //         product: _product,
-                              //         category: cat,
-                              //       ),
-                              //     ),
-                              //     (route) => false);
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                     builder: (context) => ProductSearchScreen(),
