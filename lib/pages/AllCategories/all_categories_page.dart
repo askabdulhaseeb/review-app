@@ -5,18 +5,19 @@
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:reviewapp/model/review.dart';
 import '../../database/reviews_firebase_methods.dart';
 // import 'package:review_app/database/video_uploade_firebase.dart';
 import '../../pages/AllCategories/custome_tab_bar_view.dart';
 // import 'package:review_app/pages/videoOfFirebasse/video.dart';
 // import 'package:review_app/screens/sub_category/sub_category_screen.dart';
 import 'adds_carouse_slider.dart';
-import '../../model/review_video.dart';
+// import '../../model/review_video.dart';
 import '../../screens/search/search_screen.dart';
 import '../../services/user_local_data.dart';
 import '../../utils/color_constants.dart';
 import 'review_video_gridview_card.dart';
-import 'video_widget.dart';
+// import 'video_widget.dart';
 
 class AllCategoriesPage extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class AllCategoriesPage extends StatefulWidget {
 
 class _AllCategoriesPageState extends State<AllCategoriesPage>
     with SingleTickerProviderStateMixin {
-  List<ReviewVideo> _reviewVideosList = [];
+  List<Review> reviewList = [];
   List<String> _tabsName = [];
   List<String> _facCatId = [];
   int _initPosition = 1;
@@ -39,7 +40,7 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
   }
 
   _streamFunctionHelper(int index) async {
-    print('Possition: ${_facCatId[_initPosition - 1]}');
+    // print('Possition: ${_facCatId[_initPosition - 1]}');
     _stream = await ReviewsFirebaseMethods().getAllReviewsOfSpecificCategory(
       categoryID: _facCatId[_initPosition - 1],
     );
@@ -49,6 +50,13 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
   _getUpdatedStream() {
     _streamFunctionHelper(_initPosition);
     return _stream;
+  }
+
+  _getReviewObject(String reviewID) async {
+    var doc = await ReviewsFirebaseMethods()
+        .getSpecificReviewByID(reviewID: reviewID);
+    Review review = Review.fromDocument(doc);
+    return review;
   }
 
   @override
@@ -94,13 +102,6 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
             return Column(
               children: [
                 AddsCarouseSlider(),
-                // VideoWidget(
-                //     'https://firebasestorage.googleapis.com/v0/b/myrevue-a3152.appspot.com/o/reviews%2F1621364387503b050a018-7729-4ce7-931c-493d2ede3bf63592458739462634040.mp4?alt=media&token=e08058bc-bbbb-4ec9-92a5-39bf1763f400'),
-                // Flexible(
-                // ReviewVideoCardWidget(
-                //   url:
-                //       'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                // ),
                 StreamBuilder(
                   stream: _getUpdatedStream(),
                   builder: (context, snapshot) {
@@ -109,37 +110,48 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
                         child: Text('Error 404\nData not Found'),
                       );
                     } else {
-                      print('Length: ${snapshot?.data?.docs?.length}');
+                      if (snapshot.data?.docs != null) {
+                        reviewList.clear();
+                        snapshot.data.docs.forEach((doc) {
+                          reviewList.add(Review.fromDocument(doc));
+                        });
+                      }
+
                       return (snapshot.hasData)
-                          ? GridView.builder(
-                              padding: EdgeInsets.all(16),
-                              itemCount: snapshot?.data?.docs?.length,
-                              shrinkWrap: true,
-                              primary: false,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                                childAspectRatio: 0.7,
-                              ),
-                              itemBuilder: (BuildContext context, int index) {
-                                if (snapshot?.data?.docs[index] != null) {
-                                  DocumentSnapshot ds =
-                                      snapshot?.data?.docs[index];
-                                  return ReviewVideoCardWidget(
-                                    // url: ds['url'] ?? '',
-                                    url: ds['videoURL'],
-                                    reviewID: ds['reviewID'] ?? '',
-                                    title: ds['title'] ?? 'No Title',
-                                    views: int.parse(ds['views'].toString()),
-                                  );
-                                } else {
-                                  return Center(
-                                    child: Text('No data found'),
-                                  );
-                                }
-                              })
+                          ? (reviewList.length == 0)
+                              ? Center(
+                                  child: Text('No data found'),
+                                )
+                              : GridView.builder(
+                                  padding: EdgeInsets.all(16),
+                                  // itemCount: snapshot?.data?.docs?.length,
+                                  itemCount: reviewList.length,
+                                  shrinkWrap: true,
+                                  primary: false,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8,
+                                    childAspectRatio: 0.7,
+                                  ),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    // DocumentSnapshot ds =
+                                    //     snapshot?.data?.docs[index];
+                                    // Review review =
+                                    //     _getReviewObject(ds['reviewID']);
+                                    // print('Okay: ${review.title}');
+                                    return ReviewVideoCardWidget(
+                                      review: reviewList[index],
+                                    );
+                                    // return ReviewVideoCardWidget(
+                                    //   url: ds['videoURL'],
+                                    //   reviewID: ds['reviewID'] ?? '',
+                                    //   title: ds['title'] ?? 'No Title',
+                                    //   views: int.parse(ds['views'].toString()),
+                                    // );
+                                  })
                           : Container(
                               child: Center(
                                 child: CircularProgressIndicator(),

@@ -19,7 +19,6 @@ class _VideoAppState extends State<VideoWidget> {
   @override
   void initState() {
     super.initState();
-    print('Video Link: ${widget._videoUrl}');
     if (widget._videoUrl != null) {
       _controller = VideoPlayerController.network(widget._videoUrl)
         ..initialize().then((_) {

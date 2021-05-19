@@ -50,9 +50,24 @@ class AppUser {
     };
   }
 
+  factory AppUser.fromDocument(doc) {
+    return AppUser(
+      uid: doc.data()['uid'] ?? '',
+      firstName: doc.data()['firstName'] ?? '',
+      lastName: doc.data()['lastName'] ?? '',
+      imageURL: doc.data()['imageURL'] ?? '',
+      email: doc.data()['email'] ?? '',
+      phoneNumber: doc.data()['phoneNumber'] ?? '',
+      profession: doc.data()['profession'] ?? '',
+      gender: doc.data()['gender'] ?? '',
+      dateOfBirth: doc.data()['dateOfBirth'] ?? '',
+      address: doc.data()['address'] ?? '',
+    );
+  }
+
   factory AppUser.fromMap(Map<String, dynamic> map) {
     return AppUser(
-      uid: map['id'] ?? '',
+      uid: map['uid'] ?? '',
       firstName: map['firstName'] ?? '',
       lastName: map['lastName'] ?? '',
       imageURL: map['imageURL'] ?? '',

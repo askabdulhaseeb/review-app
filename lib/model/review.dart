@@ -39,6 +39,20 @@ class Review {
     };
   }
 
+  factory Review.fromDocument(doc) {
+    return Review(
+      uid: doc.data()['uid'],
+      reviewID: doc.data()['reviewID'],
+      productId: doc.data()['productId'],
+      categoryId: doc.data()['categoryId'],
+      title: doc.data()['title'],
+      about: doc.data()['about'],
+      rating: doc.data()['rating'],
+      views: doc.data()['views'],
+      videoURL: doc.data()['videoURL'],
+    );
+  }
+
   factory Review.fromMap(Map<String, dynamic> map) {
     return Review(
       uid: map['uid'],

@@ -15,6 +15,10 @@ class ReviewsFirebaseMethods {
         .snapshots();
   }
 
+  getSpecificReviewByID({@required String reviewID}) async {
+    return FirebaseFirestore.instance.collection(fReviews).doc(reviewID).get();
+  }
+
   storeVideoToFirestore(File image) async {
     try {
       final ref = FirebaseStorage.instance.ref(
