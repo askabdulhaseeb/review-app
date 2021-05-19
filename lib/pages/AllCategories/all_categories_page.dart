@@ -29,7 +29,6 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
   }
 
   _streamFunctionHelper(int index) async {
-    // print('Possition: ${_facCatId[_initPosition - 1]}');
     _stream = await ReviewsFirebaseMethods().getAllReviewsOfSpecificCategory(
       categoryID: _facCatId[_initPosition - 1],
     );
@@ -105,7 +104,6 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
                           reviewList.add(Review.fromDocument(doc));
                         });
                       }
-
                       return (snapshot.hasData)
                           ? (reviewList.length == 0)
                               ? Center(

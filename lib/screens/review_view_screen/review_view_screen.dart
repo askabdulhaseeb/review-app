@@ -6,7 +6,6 @@ import 'package:reviewapp/pages/AllCategories/video_widget.dart';
 import 'package:reviewapp/services/user_local_data.dart';
 import 'package:reviewapp/utils/assets_images.dart';
 import 'package:reviewapp/utils/color_constants.dart';
-import 'package:video_player/video_player.dart';
 
 class ReviewViewScreen extends StatefulWidget {
   final Review review;

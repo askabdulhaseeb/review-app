@@ -21,9 +21,9 @@ class _VideoAppState extends State<VideoWidget> {
     super.initState();
     if (widget._videoUrl != null) {
       _controller = VideoPlayerController.network(widget._videoUrl)
-        ..initialize().then((_) {
-          setState(() {});
-        });
+        ..addListener(() => setState(() {}))
+        ..setLooping(true)
+        ..initialize().then((_) => _controller.play());
     }
   }
 
@@ -36,9 +36,11 @@ class _VideoAppState extends State<VideoWidget> {
           child: IconButton(
             onPressed: () {
               setState(() {
-                _controller?.value?.isPlaying == true
-                    ? _controller?.pause()
-                    : _controller?.play();
+                if (_controller.value.isPlaying) {
+                  _controller.pause();
+                } else {
+                  _controller.play();
+                }
               });
             },
             iconSize: 45,

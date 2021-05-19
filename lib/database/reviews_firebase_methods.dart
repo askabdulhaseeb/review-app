@@ -19,6 +19,13 @@ class ReviewsFirebaseMethods {
     return FirebaseFirestore.instance.collection(fReviews).doc(reviewID).get();
   }
 
+  getAllReviewByID({@required String uid}) async {
+    return FirebaseFirestore.instance
+        .collection(fReviews)
+        .where('uid', isEqualTo: uid)
+        .snapshots();
+  }
+
   storeVideoToFirestore(File image) async {
     try {
       final ref = FirebaseStorage.instance.ref(
