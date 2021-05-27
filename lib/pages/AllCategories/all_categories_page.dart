@@ -39,7 +39,7 @@ class _AllCategoriesPageState extends State<AllCategoriesPage>
     //     (route) => false,
     //   );
     // }
-    if (_initPosition == 1) {
+    if (_initPosition == 0) {
       _stream = await ReviewsFirebaseMethods().getAllReviews();
     } else {
       _stream = await ReviewsFirebaseMethods().getAllReviewsOfSpecificCategory(
